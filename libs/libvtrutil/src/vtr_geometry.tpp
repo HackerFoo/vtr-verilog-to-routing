@@ -167,7 +167,6 @@ bool operator!=(const Rect<T>& lhs, const Rect<T>& rhs) {
 }
 
 template<class T>
-void Rect<T>::set_xmin(T xmin_val) {
 Rect<T> bounding_box(const Rect<T>& lhs, const Rect<T>& rhs) {
     return Rect<T>(std::min(lhs.xmin(), rhs.xmin()),
                    std::min(lhs.ymin(), rhs.ymin()),
@@ -175,22 +174,28 @@ Rect<T> bounding_box(const Rect<T>& lhs, const Rect<T>& rhs) {
                    std::max(lhs.ymax(), rhs.ymax()));
 }
 
+template<class T>
+Rect<T>& Rect<T>::set_xmin(T xmin_val) {
     bottom_left_.set_x(xmin_val);
+    return *this;
 }
 
 template<class T>
-void Rect<T>::set_ymin(T ymin_val) {
+Rect<T>& Rect<T>::set_ymin(T ymin_val) {
     bottom_left_.set_y(ymin_val);
+    return *this;
 }
 
 template<class T>
-void Rect<T>::set_xmax(T xmax_val) {
+Rect<T>& Rect<T>::set_xmax(T xmax_val) {
     top_right_.set_x(xmax_val);
+    return *this;
 }
 
 template<class T>
-void Rect<T>::set_ymax(T ymax_val) {
+Rect<T>& Rect<T>::set_ymax(T ymax_val) {
     top_right_.set_y(ymax_val);
+    return *this;
 }
 
 template<class T>

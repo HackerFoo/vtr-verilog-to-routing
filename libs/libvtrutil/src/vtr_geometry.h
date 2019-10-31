@@ -124,10 +124,10 @@ class Rect {
 
   public: //Mutators
     //Co-ordinates
-    void set_xmin(T xmin_val);
-    void set_ymin(T ymin_val);
-    void set_xmax(T xmax_val);
-    void set_ymax(T ymax_val);
+    Rect<T>& set_xmin(T xmin_val);
+    Rect<T>& set_ymin(T ymin_val);
+    Rect<T>& set_xmax(T xmax_val);
+    Rect<T>& set_ymax(T ymax_val);
 
     //Equivalent to `*this = bounding_box(*this, other)`
     Rect<T>& expand_bounding_box(const Rect<T>& other);
