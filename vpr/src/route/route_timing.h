@@ -10,6 +10,7 @@
 #include "route_common.h"
 #include "router_stats.h"
 #include "router_lookahead.h"
+#include "routing_predictor.h"
 
 extern bool f_router_debug;
 
@@ -37,7 +38,8 @@ bool try_timing_driven_route_net(ClusterNetId net_id,
                                  const ClusteredPinAtomPinsLookup& netlist_pin_lookup,
                                  std::shared_ptr<SetupTimingInfo> timing_info,
                                  route_budgets& budgeting_inf,
-                                 bool& was_rerouted);
+                                 bool& was_rerouted,
+                                 const RoutingPredictor& routing_predictor);
 
 bool timing_driven_route_net(ClusterNetId net_id,
                              int itry,
@@ -51,7 +53,8 @@ bool timing_driven_route_net(ClusterNetId net_id,
                              const RouterLookahead& router_lookahead,
                              const ClusteredPinAtomPinsLookup& netlist_pin_lookup,
                              std::shared_ptr<const SetupTimingInfo> timing_info,
-                             route_budgets& budgeting_inf);
+                             route_budgets& budgeting_inf,
+                             const RoutingPredictor& routing_predictor);
 
 void alloc_timing_driven_route_structs(float** pin_criticality_ptr,
                                        int** sink_order_ptr,
