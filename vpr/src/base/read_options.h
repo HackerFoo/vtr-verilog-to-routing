@@ -151,6 +151,7 @@ struct t_options {
     argparse::ArgValue<e_route_bb_update> route_bb_update;
     argparse::ArgValue<int> router_high_fanout_threshold;
     argparse::ArgValue<float> router_high_fanout_max_slope;
+    argparse::ArgValue<float> router_congested_routing_slope_threshold;
     argparse::ArgValue<int> router_debug_net;
     argparse::ArgValue<int> router_debug_sink_rr;
     argparse::ArgValue<e_router_lookahead> router_lookahead_type;

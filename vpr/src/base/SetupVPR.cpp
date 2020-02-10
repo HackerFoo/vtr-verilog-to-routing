@@ -366,6 +366,7 @@ static void SetupRouterOpts(const t_options& Options, t_router_opts* RouterOpts)
     RouterOpts->two_stage_clock_routing = Options.two_stage_clock_routing;
     RouterOpts->high_fanout_threshold = Options.router_high_fanout_threshold;
     RouterOpts->high_fanout_max_slope = Options.router_high_fanout_max_slope;
+    RouterOpts->congested_routing_slope_threshold = Options.router_congested_routing_slope_threshold;
     RouterOpts->router_debug_net = Options.router_debug_net;
     RouterOpts->router_debug_sink_rr = Options.router_debug_sink_rr;
     RouterOpts->lookahead_type = Options.router_lookahead_type;

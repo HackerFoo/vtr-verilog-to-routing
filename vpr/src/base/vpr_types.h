@@ -946,6 +946,7 @@ struct t_router_opts {
     bool two_stage_clock_routing;         //How clock nets on dedicated networks should be routed
     int high_fanout_threshold;
     float high_fanout_max_slope;
+    float congested_routing_slope_threshold;
     int router_debug_net;
     int router_debug_sink_rr;
     e_router_lookahead lookahead_type;
