@@ -29,7 +29,7 @@ If `rr_graph.xsd` is modified, then the following files must be updated:
    `rr_graph_uxsdcxx_interface.h` to `vpr/src/route/`
 5. Copy `rr_graph_uxsdcxx.capnp` to `libs/libvtrcapnproto/`
 6. Run `make format`
-7. Update `vpr/src/route/rr_graph_uxsdcxx_interface_impl.h`, implement or
+7. Update `vpr/src/route/rr_graph_uxsdcxx_serializer.h`, implement or
    update interfaces that are new or are changed.  The compiler will complain
    that virtual methods are missing if the schema has changed.
 
