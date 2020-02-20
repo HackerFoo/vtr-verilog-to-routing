@@ -172,6 +172,7 @@ class t_rr_node {
     t_edge_size num_edges_ = 0;
     t_edge_size edges_capacity_ = 0;
     uint8_t num_non_configurable_edges_ = 0;
+    uint8_t capacity_ = 0;
 
     uint16_t cost_index_ = -1;
     int16_t rc_index_ = -1;
@@ -193,7 +194,6 @@ class t_rr_node {
         int16_t class_num;
     } ptc_;
     t_edge_size fan_in_ = 0;
-    uint16_t capacity_ = 0;
 };
 
 /* Data that is pointed to by the .cost_index member of t_rr_node.  It's     *
