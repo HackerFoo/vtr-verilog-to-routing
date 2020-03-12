@@ -137,6 +137,7 @@ struct t_options {
     argparse::ArgValue<bool> read_rr_edge_metadata;
     argparse::ArgValue<bool> disable_check_route;
     argparse::ArgValue<bool> quick_check_route;
+    argparse::ArgValue<bool> reorder_rr_graph_nodes;
 
     /* Timing-driven router options only */
     argparse::ArgValue<float> astar_fac;

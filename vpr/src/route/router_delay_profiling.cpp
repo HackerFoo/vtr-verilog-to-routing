@@ -212,6 +212,7 @@ void alloc_routing_structs(t_chan_width chan_width,
                     directs, num_directs,
                     &warnings,
                     router_opts.read_rr_edge_metadata,
+                    router_opts.reorder_rr_graph_nodes,
                     router_opts.do_check_rr_graph);
 
     alloc_and_load_rr_node_route_structs();

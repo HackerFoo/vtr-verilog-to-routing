@@ -41,6 +41,7 @@ void create_rr_graph(const t_graph_type graph_type,
                      const int num_directs,
                      int* Warnings,
                      bool read_rr_edge_metadata,
+                     bool do_reorder_rr_graph_nodes,
                      bool do_check_rr_graph);
 
 void free_rr_graph();

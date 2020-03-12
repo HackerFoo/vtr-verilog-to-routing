@@ -906,6 +906,7 @@ enum class e_incr_reroute_delay_ripup {
 constexpr int NO_FIXED_CHANNEL_WIDTH = -1;
 
 struct t_router_opts {
+    bool reorder_rr_graph_nodes = false;
     bool read_rr_edge_metadata = false;
     bool do_check_rr_graph = true;
     float first_iter_pres_fac;

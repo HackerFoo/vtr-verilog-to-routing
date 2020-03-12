@@ -235,6 +235,7 @@ void try_graph(int width_fac, const t_router_opts& router_opts, t_det_routing_ar
                     directs, num_directs,
                     &warning_count,
                     router_opts.read_rr_edge_metadata,
+                    router_opts.reorder_rr_graph_nodes,
                     router_opts.do_check_rr_graph);
 }
 
@@ -287,6 +288,7 @@ bool try_route(int width_fac,
                     directs, num_directs,
                     &warning_count,
                     router_opts.read_rr_edge_metadata,
+                    router_opts.reorder_rr_graph_nodes,
                     router_opts.do_check_rr_graph);
 
     //Initialize drawing, now that we have an RR graph
