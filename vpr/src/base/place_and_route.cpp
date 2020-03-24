@@ -352,15 +352,9 @@ int binary_search_place_and_route(const t_placer_opts& placer_opts_ref,
                     device_ctx.num_arch_switches,
                     det_routing_arch,
                     segment_inf,
-                    router_opts.base_cost_type,
-                    router_opts.trim_empty_channels,
-                    router_opts.trim_obs_channels,
-                    router_opts.clock_modeling,
+                    router_opts,
                     arch->Directs, arch->num_directs,
-                    &warnings,
-                    router_opts.read_rr_edge_metadata,
-                    router_opts.reorder_rr_graph_nodes,
-                    router_opts.do_check_rr_graph);
+                    &warnings);
 
     init_draw_coords(final);
 
