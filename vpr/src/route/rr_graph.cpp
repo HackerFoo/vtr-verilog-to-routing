@@ -3060,9 +3060,17 @@ class EdgeGroups {
             VTR_ASSERT(merge.first != OPEN);
             VTR_ASSERT(merge.second != OPEN);
 
-            int target_set = find_target_set(final_set_map, merge.first);
+            bool success;
+            auto it = final_set_map.find(merge.first);
+            int target_set = it == final_set_map.end() ? merge.first : it->second;
+            std::tie(it, success) = final_set_map.insert(std::make_pair(merge.second, target_set));
 
-            final_set_map.insert(std::make_pair(merge.second, target_set));
+            // This is needed considering this sequence: 1 <- 4, 2 <- 3, 3 <- 5, 4 <- 5
+            // Without this the result would have been: 4 -> 1, 3 -> 2, 5 -> 2 (5 -> 3 -> 2)
+            //   where the last mapping should be: 5 -> 1 (5 -> 4 -> 1)
+            if (!success && target_set < it->second) {
+                it->second = target_set;
+            }
         }
 
         // Finalize merges between node set ids.
