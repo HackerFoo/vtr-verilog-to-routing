@@ -655,7 +655,7 @@ void t_rr_graph_storage::reorder(const vtr::vector<RRNodeId, RRNodeId>& order,
                  e = RREdgeId(size_t(e) + 1)) {
                 edge_src_node_[cur_edge] = order[old_edge_src_node[e]]; // == n?
                 edge_dest_node_[cur_edge] = order[old_edge_dest_node[e]];
-                edge_switch_[cur_edge] = edge_switch_[e];
+                edge_switch_[cur_edge] = old_edge_switch[e];
                 cur_edge = RREdgeId(size_t(cur_edge) + 1);
             }
         }
@@ -670,6 +670,24 @@ void t_rr_graph_storage::reorder(const vtr::vector<RRNodeId, RRNodeId>& order,
         auto old_node_fan_in = node_fan_in_;
         for (size_t i = 0; i < node_fan_in_.size(); i++) {
             node_fan_in_[order[RRNodeId(i)]] = old_node_fan_in[RRNodeId(i)];
+        }
+    }
+
+    // Check that edges are still partitioned
+    if (partitioned_) {
+        auto& device_ctx = g_vpr_ctx.device();
+        for (size_t i = 0; i < size(); i++) {
+            RRNodeId n(i);
+            bool configurable_partition = true;
+            for (auto e = first_edge(n);
+                 e < last_edge(n);
+                 e = RREdgeId(size_t(e) + 1)) {
+                if (device_ctx.rr_switch_inf[edge_switch(e)].configurable()) {
+                    VTR_ASSERT(configurable_partition);
+                } else {
+                    configurable_partition = false;
+                }
+            }
         }
     }
 }
