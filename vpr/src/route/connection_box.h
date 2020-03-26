@@ -11,6 +11,8 @@
 #include "vtr_flat_map.h"
 #include "vtr_range.h"
 #include "vtr_strong_id.h"
+#include "vtr_vector.h"
+#include "rr_node_fwd.h"
 
 struct connection_box_tag {};
 typedef vtr::StrongId<connection_box_tag> ConnectionBoxId;
@@ -72,6 +74,8 @@ class ConnectionBoxes {
     void create_sink_back_ref();
     const SinkToIpin& find_sink_connection_boxes(
         int inode) const;
+
+    void reorder(const vtr::vector<RRNodeId, RRNodeId>& order);
 
   private:
     std::pair<size_t, size_t> size_;

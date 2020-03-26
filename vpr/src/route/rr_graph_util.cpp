@@ -152,4 +152,6 @@ void reorder_rr_graph_nodes(const t_router_opts& router_opts) {
             }
         }
     }
+
+    device_ctx.connection_boxes.reorder(dest_order);
 }

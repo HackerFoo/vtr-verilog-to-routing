@@ -171,3 +171,29 @@ const SinkToIpin& ConnectionBoxes::find_sink_connection_boxes(
     int inode) const {
     return sink_to_ipin_[inode];
 }
+
+void ConnectionBoxes::reorder(const vtr::vector<RRNodeId, RRNodeId>& order) {
+    if (size_.first == 0 || size_.second == 0) return;
+    {
+        auto old_ipin_map = ipin_map_;
+        for (size_t i = 0; i < ipin_map_.size(); i++) {
+            ipin_map_[size_t(order[RRNodeId(i)])] = old_ipin_map[i];
+        }
+    }
+    {
+        auto old_sink_to_ipin = sink_to_ipin_;
+        for (size_t i = 0; i < sink_to_ipin_.size(); i++) {
+            auto sink_to_ipin = old_sink_to_ipin[i];
+            for (int j = 0; j < sink_to_ipin.ipin_count; j++) {
+                sink_to_ipin.ipin_nodes[j] = size_t(order[RRNodeId(sink_to_ipin.ipin_nodes[j])]);
+            }
+            sink_to_ipin_[size_t(order[RRNodeId(i)])] = sink_to_ipin;
+        }
+    }
+    {
+        auto old_canonical_loc_map = canonical_loc_map_;
+        for (size_t i = 0; i < canonical_loc_map_.size(); i++) {
+            canonical_loc_map_[size_t(order[RRNodeId(i)])] = old_canonical_loc_map[i];
+        }
+    }
+}
