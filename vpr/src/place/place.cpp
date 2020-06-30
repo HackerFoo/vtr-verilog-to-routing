@@ -75,7 +75,7 @@ using std::min;
 
 //Use an incremental approach to updating timing costs after re-computing
 //criticalities (i.e. after a timing update)
-#define INCR_COMP_TD_COSTS
+//#define INCR_COMP_TD_COSTS
 
 /* For comp_cost.  NORMAL means use the method that generates updateable  *
  * bounding boxes for speed.  CHECK means compute all bounding boxes from *
