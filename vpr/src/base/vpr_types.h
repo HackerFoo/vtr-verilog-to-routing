@@ -997,6 +997,12 @@ enum e_router_algorithm {
     TIMING_DRIVEN,
 };
 
+enum e_node_reorder_algorithm {
+    DONT_REORDER,
+    DEGREE_BFS,
+    RANDOM_SHUFFLE,
+};
+
 enum e_base_cost_type {
     DELAY_NORMALIZED,
     DELAY_NORMALIZED_LENGTH,
@@ -1049,6 +1055,9 @@ enum class e_incr_reroute_delay_ripup {
 constexpr int NO_FIXED_CHANNEL_WIDTH = -1;
 
 struct t_router_opts {
+    e_node_reorder_algorithm reorder_rr_graph_nodes_algorithm = DONT_REORDER;
+    int reorder_rr_graph_nodes_threshold = 0;
+    int reorder_rr_graph_nodes_seed = 1;
     bool read_rr_edge_metadata = false;
     bool do_check_rr_graph = true;
     float first_iter_pres_fac;
