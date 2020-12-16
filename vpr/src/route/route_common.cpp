@@ -694,9 +694,32 @@ void reset_path_costs(const std::vector<int>& visited_rr_nodes) {
     }
 }
 
-/* Returns the congestion cost of using this rr-node. */
+bool verify_all_same_cong(int inode, float pres_fac, float cost) {
+    auto& device_ctx = g_vpr_ctx.device();
+    auto& route_ctx = g_vpr_ctx.routing();
+
+    if (route_ctx.non_configurable_bitset.get(inode)) {
+        // Access unordered_map only when the node is part of a non-configurable set
+        auto itr = device_ctx.rr_node_to_non_config_node_set.find(inode);
+        if (itr != device_ctx.rr_node_to_non_config_node_set.end()) {
+            for (int node : device_ctx.rr_non_config_node_sets[itr->second]) {
+                if (std::abs(cost - get_single_rr_cong_cost(node, pres_fac)) > 1e-6) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+/* Returns the congestion cost of using this rr-node plus that of any      *
+ * non-configurably connected rr_nodes that must be used when it is used.  */
 float get_rr_cong_cost(int inode, float pres_fac) {
-    return get_single_rr_cong_cost(inode, pres_fac);
+    float cost = get_single_rr_cong_cost(inode, pres_fac);
+
+    VTR_ASSERT_SAFE(verify_all_same_cong(inode, pres_fac, cost));
+
+    return (cost);
 }
 
 /* Mark all the SINKs of this net as targets by setting their target flags  *
