@@ -382,14 +382,30 @@ void pathfinder_update_path_occupancy(t_trace* route_segment_start, int add_or_s
      * if it is 1, the net is added to the routing.
      */
 
+    auto& route_ctx = g_vpr_ctx.routing();
+    auto& device_ctx = g_vpr_ctx.device();
+
     t_trace* tptr;
+    bool inside_non_configurable_node_set = false;
 
     tptr = route_segment_start;
     if (tptr == nullptr) /* No routing yet. */
         return;
 
     for (;;) {
-        pathfinder_update_single_node_occupancy(tptr->index, add_or_sub);
+        if (!route_ctx.non_configurable_bitset.get(tptr->index)) {
+            inside_non_configurable_node_set = false;
+            pathfinder_update_single_node_occupancy(tptr->index, add_or_sub);
+        } else if (!inside_non_configurable_node_set) {
+            // If entering a non-configurable node set, update all nodes in that set,
+            // then skip updates until until out of the set.
+            inside_non_configurable_node_set = true;
+            auto itr = device_ctx.rr_node_to_non_config_node_set.find(tptr->index);
+            VTR_ASSERT(itr != device_ctx.rr_node_to_non_config_node_set.end());
+            for (int node : device_ctx.rr_non_config_node_sets[itr->second]) {
+                pathfinder_update_single_node_occupancy(node, add_or_sub);
+            }
+        }
 
         if (tptr->iswitch == OPEN) { //End of branch
             tptr = tptr->next;       /* Skip next segment. */
@@ -697,23 +713,15 @@ void reset_path_costs(const std::vector<int>& visited_rr_nodes) {
 /* Returns the congestion cost of using this rr-node plus that of any      *
  * non-configurably connected rr_nodes that must be used when it is used.  */
 float get_rr_cong_cost(int inode, float pres_fac) {
-    auto& device_ctx = g_vpr_ctx.device();
-    auto& route_ctx = g_vpr_ctx.routing();
+    auto& route_ctx = g_vpr_ctx.mutable_routing();
 
-    float cost = get_single_rr_cong_cost(inode, pres_fac);
+    float cost = 0.;
+    float non_config_cong_base_cost = route_ctx.rr_non_config_node_cong_base_costs[inode];
 
-    if (route_ctx.non_configurable_bitset.get(inode)) {
-        // Access unordered_map only when the node is part of a non-configurable set
-        auto itr = device_ctx.rr_node_to_non_config_node_set.find(inode);
-        if (itr != device_ctx.rr_node_to_non_config_node_set.end()) {
-            for (int node : device_ctx.rr_non_config_node_sets[itr->second]) {
-                if (node == inode) {
-                    continue; //Already included above
-                }
-
-                cost += get_single_rr_cong_cost(node, pres_fac);
-            }
-        }
+    if (non_config_cong_base_cost >= 0) {
+        cost = non_config_cong_base_cost * get_single_rr_cong_acc_cost(inode) * get_single_rr_cong_pres_cost(inode, pres_fac);
+    } else {
+        cost = get_single_rr_cong_cost(inode, pres_fac);
     }
     return (cost);
 }
@@ -934,8 +942,21 @@ void alloc_and_load_rr_node_route_structs() {
 
     reset_rr_node_route_structs();
 
+    // Calculate summed congestion base costs of non-configurable node sets.
+    // An entry is invalid if less than 0.
+    auto& base_costs = route_ctx.rr_non_config_node_cong_base_costs;
+    base_costs.resize(device_ctx.rr_nodes.size());
+    std::fill(base_costs.begin(), base_costs.end(), -1);
+
     for (auto i : device_ctx.rr_node_to_non_config_node_set) {
         route_ctx.non_configurable_bitset.set(i.first, true);
+        float base_cost = 0.;
+        for (int n : device_ctx.rr_non_config_node_sets[i.second]) {
+            base_cost += get_single_rr_cong_base_cost(n);
+        }
+        for (int n : device_ctx.rr_non_config_node_sets[i.second]) {
+            base_costs[n] = base_cost;
+        }
     }
 }
 
